@@ -39,6 +39,7 @@ public class Output {
 		{
 			System.out.print(hand[i].getValue() + hand[i].getSuit() + " ");
 		}
+		
 	}
 	
 	/**

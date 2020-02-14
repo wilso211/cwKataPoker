@@ -1,3 +1,5 @@
+import java.applet.Applet;
+
 /**
  * Game is the driver class for the Kata Poker
  * comparison application. It initiates the game
@@ -7,7 +9,12 @@
  *
  */
 
-public class Game {
+public class Game extends Applet{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 4687456137374959280L;
 
 	/**
 	 * The number of players in the game
@@ -19,6 +26,7 @@ public class Game {
 	 */
 	private int handSize = 5;
 	
+	private UI ui;
 	private Dealer dealer;
 	private Player[] players;
 	private Compare comparer;
@@ -56,6 +64,11 @@ public class Game {
 	 */
 	public void setUpGame()
 	{
+		UI myUI = new UI("Poker Hands");
+		this.ui = myUI;
+		this.ui.initiateFrame();
+		this.ui.showUI();
+		
 		Player[] players = new Player[numPlayers];
 		for(int i = 0; i < this.numPlayers; i++)
 		{
@@ -147,12 +160,34 @@ public class Game {
 	 */
 	public void outputPlayerHands()
 	{
+		String hand = "";
+		
 		for(int i = 0; i < this.getPlayers().length; i++)
-		{
+		{	
 			System.out.print("Player " + (i + 1) + ": ");
 			this.outputter.printHand(this.getPlayers()[i].getHand().getHandCards());
 			System.out.println();
 		}
+		
+		hand = "Player 1 hand: ";
+		for(int i = 0; i < this.getPlayers()[0].getHand().getHandCards().length; i++)
+		{
+			hand += this.getPlayers()[0].getHand().getHandCards()[i].getValue();
+			hand += this.getPlayers()[0].getHand().getHandCards()[i].getSuit();
+			hand += " ";
+		}
+		this.ui.setP1Cards(hand);
+		
+		hand = "";
+		hand = "Player 2 hand: ";
+		for(int i = 0; i < this.getPlayers()[0].getHand().getHandCards().length; i++)
+		{
+			hand += this.getPlayers()[1].getHand().getHandCards()[i].getValue();
+			hand += this.getPlayers()[1].getHand().getHandCards()[i].getSuit();
+			hand += " ";
+		}
+		this.ui.setP2Cards(hand);
+		
 		System.out.println();
 	}
 	
@@ -170,6 +205,9 @@ public class Game {
 			this.outputter.printHandType(this.getPlayers()[i].getHand());
 			System.out.println();
 		}
+		
+		this.ui.setP1HandType("Player 1:  " + this.getPlayers()[0].getHand().getHandType());
+		this.ui.setP2HandType("Player 2:  " + this.getPlayers()[1].getHand().getHandType());
 	}
 	
 	/**
@@ -185,10 +223,12 @@ public class Game {
 			if(this.getPlayers()[i].getWinner())
 			{
 				this.outputter.printWinner(i, this.getPlayers()[i].getHand());
+				this.ui.setResult("Player " + (i + 1) + " wins with a " + this.getPlayers()[i].getHand().getHandType());
 			}
 			if(this.getPlayers()[i].getTie())
 			{
 				this.outputter.printTie();
+				this.ui.setResult("The game has resulted in a tie.");
 				break;
 			}
 		}
